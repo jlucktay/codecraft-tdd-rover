@@ -12,21 +12,21 @@ import (
 // - Rover initialise at coords with facing
 //   - positioning grid would be pair of signed integers
 func TestRoverInit(t *testing.T) {
-	rover.New(4, 7, 'N')
+	rover.New(4, 7, rover.North)
 }
 
 func TestRoverInstructTurn(t *testing.T) {
 	testCases := map[string]struct {
 		turn, start, finish rune
 	}{
-		"Turn left from north":  {turn: 'L', start: 'N', finish: 'W'},
-		"Turn left from east":   {turn: 'L', start: 'E', finish: 'N'},
-		"Turn left from south":  {turn: 'L', start: 'S', finish: 'E'},
-		"Turn left from west":   {turn: 'L', start: 'W', finish: 'S'},
-		"Turn right from north": {turn: 'R', start: 'N', finish: 'E'},
-		"Turn right from east":  {turn: 'R', start: 'E', finish: 'S'},
-		"Turn right from south": {turn: 'R', start: 'S', finish: 'W'},
-		"Turn right from west":  {turn: 'R', start: 'W', finish: 'N'},
+		"Turn left from north":  {turn: rover.Left, start: rover.North, finish: rover.West},
+		"Turn left from east":   {turn: rover.Left, start: rover.East, finish: rover.North},
+		"Turn left from south":  {turn: rover.Left, start: rover.South, finish: rover.East},
+		"Turn left from west":   {turn: rover.Left, start: rover.West, finish: rover.South},
+		"Turn right from north": {turn: rover.Right, start: rover.North, finish: rover.East},
+		"Turn right from east":  {turn: rover.Right, start: rover.East, finish: rover.South},
+		"Turn right from south": {turn: rover.Right, start: rover.South, finish: rover.West},
+		"Turn right from west":  {turn: rover.Right, start: rover.West, finish: rover.North},
 	}
 
 	for desc, tc := range testCases {
@@ -39,41 +39,40 @@ func TestRoverInstructTurn(t *testing.T) {
 			rov.Instruct(tc.turn)
 
 			// Then / Assert
-			is.Equal(rov.GetFacing(), tc.finish) // not facing correct final direction
+			is.Equal(rov.GetFacing(), tc.finish) // Rover is not facing correct final direction
 		})
 	}
 }
 
 func TestRoverMove(t *testing.T) {
 	testCases := map[rune][]struct {
-		finish  rover.Coords
 		moveDir rune
+		finish  rover.Coords
 	}{
-		'N': {
-			{moveDir: 'F', finish: rover.Coords{0, 1}},
-			{moveDir: 'B', finish: rover.Coords{0, -1}},
+		rover.North: {
+			{moveDir: rover.Forward, finish: rover.Coords{0, 1}},
+			{moveDir: rover.Backward, finish: rover.Coords{0, -1}},
 		},
 
-		'E': {
-			{moveDir: 'F', finish: rover.Coords{1, 0}},
-			{moveDir: 'B', finish: rover.Coords{-1, 0}},
+		rover.East: {
+			{moveDir: rover.Forward, finish: rover.Coords{1, 0}},
+			{moveDir: rover.Backward, finish: rover.Coords{-1, 0}},
 		},
 
-		'S': {
-			{moveDir: 'F', finish: rover.Coords{0, -1}},
-			{moveDir: 'B', finish: rover.Coords{0, 1}},
+		rover.South: {
+			{moveDir: rover.Forward, finish: rover.Coords{0, -1}},
+			{moveDir: rover.Backward, finish: rover.Coords{0, 1}},
 		},
 
-		'W': {
-			{moveDir: 'F', finish: rover.Coords{-1, 0}},
-			{moveDir: 'B', finish: rover.Coords{1, 0}},
+		rover.West: {
+			{moveDir: rover.Forward, finish: rover.Coords{-1, 0}},
+			{moveDir: rover.Backward, finish: rover.Coords{1, 0}},
 		},
 	}
 
 	for facing, outerCase := range testCases {
 		for _, innerCase := range outerCase {
-			desc := fmt.Sprintf("Face %v and move %v",
-				string(facing), string(innerCase.moveDir))
+			desc := fmt.Sprintf("Face %v and move %v", string(facing), string(innerCase.moveDir))
 
 			t.Run(desc, func(t *testing.T) {
 				// Arrange
@@ -84,7 +83,7 @@ func TestRoverMove(t *testing.T) {
 				rov.Instruct(innerCase.moveDir)
 
 				// Assert
-				is.Equal(rov.GetCoords(), innerCase.finish) // hasn't moved correctly
+				is.Equal(rov.GetCoords(), innerCase.finish) // Rover hasn't moved correctly
 			})
 		}
 	}
@@ -93,11 +92,11 @@ func TestRoverMove(t *testing.T) {
 func TestRoverMultipleInstructions(t *testing.T) {
 	// Arrange
 	is := is.New(t)
-	rov := rover.New(0, 0, 'N')
+	rov := rover.New(0, 0, rover.North)
 
 	// Act
-	rov.Instruct('F', 'R', 'F', 'F')
+	rov.Instruct(rover.Forward, rover.Right, rover.Forward, rover.Forward)
 
 	// Assert
-	is.Equal(rov.GetCoords(), rover.Coords{2, 1})
+	is.Equal(rov.GetCoords(), rover.Coords{2, 1}) // Rover hasn't followed multiple instructions properly
 }

@@ -11,6 +11,19 @@ type Coords struct {
 	X, Y int
 }
 
+const (
+	Left  rune = 'L'
+	Right rune = 'R'
+
+	Forward  rune = 'F'
+	Backward rune = 'B'
+
+	North rune = 'N'
+	East  rune = 'E'
+	South rune = 'S'
+	West  rune = 'W'
+)
+
 func New(x, y int, face rune) Rover {
 	return Rover{
 		c:      Coords{X: x, Y: y},
@@ -29,13 +42,13 @@ func (r *Rover) GetCoords() Coords {
 func (r *Rover) Instruct(instructions ...rune) {
 	for _, instruction := range instructions {
 		switch instruction {
-		case 'L':
+		case Left:
 			r.turnLeft()
-		case 'R':
+		case Right:
 			r.turnRight()
-		case 'F':
+		case Forward:
 			r.moveForward()
-		case 'B':
+		case Backward:
 			r.moveBackward()
 		}
 	}
@@ -43,52 +56,52 @@ func (r *Rover) Instruct(instructions ...rune) {
 
 func (r *Rover) turnLeft() {
 	switch r.facing {
-	case 'N':
-		r.facing = 'W'
-	case 'E':
-		r.facing = 'N'
-	case 'S':
-		r.facing = 'E'
-	case 'W':
-		r.facing = 'S'
+	case North:
+		r.facing = West
+	case East:
+		r.facing = North
+	case South:
+		r.facing = East
+	case West:
+		r.facing = South
 	}
 }
 
 func (r *Rover) turnRight() {
 	switch r.facing {
-	case 'N':
-		r.facing = 'E'
-	case 'E':
-		r.facing = 'S'
-	case 'S':
-		r.facing = 'W'
-	case 'W':
-		r.facing = 'N'
+	case North:
+		r.facing = East
+	case East:
+		r.facing = South
+	case South:
+		r.facing = West
+	case West:
+		r.facing = North
 	}
 }
 
 func (r *Rover) moveForward() {
 	switch r.facing {
-	case 'N':
+	case North:
 		r.c.Y++
-	case 'E':
+	case East:
 		r.c.X++
-	case 'S':
+	case South:
 		r.c.Y--
-	case 'W':
+	case West:
 		r.c.X--
 	}
 }
 
 func (r *Rover) moveBackward() {
 	switch r.facing {
-	case 'N':
+	case North:
 		r.c.Y--
-	case 'E':
+	case East:
 		r.c.X--
-	case 'S':
+	case South:
 		r.c.Y++
-	case 'W':
+	case West:
 		r.c.X++
 	}
 }
