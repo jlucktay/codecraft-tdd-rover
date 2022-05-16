@@ -83,5 +83,9 @@ func (r *Rover) moveBackward() {
 		r.posY--
 	case 'E':
 		r.posX--
+	case 'S':
+		r.posY++
+	case 'W':
+		r.posX++
 	}
 }

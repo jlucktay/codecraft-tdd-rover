@@ -58,6 +58,16 @@ func TestRoverMove(t *testing.T) {
 			{moveDir: 'F', finish: []int{1, 0}},
 			{moveDir: 'B', finish: []int{-1, 0}},
 		},
+
+		'S': {
+			{moveDir: 'F', finish: []int{0, -1}},
+			{moveDir: 'B', finish: []int{0, 1}},
+		},
+
+		'W': {
+			{moveDir: 'F', finish: []int{-1, 0}},
+			{moveDir: 'B', finish: []int{1, 0}},
+		},
 	}
 
 	for facing, outerCase := range testCases {

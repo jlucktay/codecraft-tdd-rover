@@ -1,5 +1,5 @@
 {
-     "go.testEnvVars": {
-          "IS_NO_COLOR": true
-     }
+  "go.testEnvVars": {
+    "IS_NO_COLOR": true
+  }
 }
