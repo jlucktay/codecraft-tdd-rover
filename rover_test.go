@@ -89,3 +89,15 @@ func TestRoverMove(t *testing.T) {
 		}
 	}
 }
+
+func TestRoverMultipleInstructions(t *testing.T) {
+	// Arrange
+	is := is.New(t)
+	rov := rover.New(0, 0, 'N')
+
+	// Act
+	rov.Instruct('F', 'R', 'F', 'F')
+
+	// Assert
+	is.Equal(rov.GetCoords(), []int{2, 1})
+}
