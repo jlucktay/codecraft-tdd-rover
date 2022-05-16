@@ -3,14 +3,17 @@ package rover
 // - Rover initialise at coords with facing
 //   - positioning grid would be pair of signed integers
 type Rover struct {
-	posX, posY int
-	facing     rune
+	c      Coords
+	facing rune
+}
+
+type Coords struct {
+	X, Y int
 }
 
 func New(x, y int, face rune) Rover {
 	return Rover{
-		posX:   x,
-		posY:   y,
+		c:      Coords{X: x, Y: y},
 		facing: face,
 	}
 }
@@ -19,8 +22,8 @@ func (r *Rover) GetFacing() rune {
 	return r.facing
 }
 
-func (r *Rover) GetCoords() []int {
-	return []int{r.posX, r.posY}
+func (r *Rover) GetCoords() Coords {
+	return r.c
 }
 
 func (r *Rover) Instruct(instructions ...rune) {
@@ -67,25 +70,25 @@ func (r *Rover) turnRight() {
 func (r *Rover) moveForward() {
 	switch r.facing {
 	case 'N':
-		r.posY++
+		r.c.Y++
 	case 'E':
-		r.posX++
+		r.c.X++
 	case 'S':
-		r.posY--
+		r.c.Y--
 	case 'W':
-		r.posX--
+		r.c.X--
 	}
 }
 
 func (r *Rover) moveBackward() {
 	switch r.facing {
 	case 'N':
-		r.posY--
+		r.c.Y--
 	case 'E':
-		r.posX--
+		r.c.X--
 	case 'S':
-		r.posY++
+		r.c.Y++
 	case 'W':
-		r.posX++
+		r.c.X++
 	}
 }
