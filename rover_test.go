@@ -5,17 +5,21 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-
+	//nolint // bugged
 	rover "go.jlucktay.dev/tdd-rover"
 )
 
 // - Rover initialise at coords with facing
 //   - positioning grid would be pair of signed integers
 func TestRoverInit(t *testing.T) {
+	t.Parallel()
+
 	rover.New(4, 7, rover.North)
 }
 
 func TestRoverInstructTurn(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		turn, start, finish rune
 	}{
@@ -29,22 +33,26 @@ func TestRoverInstructTurn(t *testing.T) {
 		"Turn right from west":  {turn: rover.Right, start: rover.West, finish: rover.North},
 	}
 
-	for desc, tc := range testCases {
+	for desc, testCase := range testCases {
 		t.Run(desc, func(t *testing.T) {
+			t.Parallel()
+
 			// Given / Arrange
-			is := is.New(t)
-			rov := rover.New(4, 7, tc.start)
+			assert := is.New(t)
+			rov := rover.New(4, 7, testCase.start)
 
 			// When	/ Act
-			rov.Instruct(tc.turn)
+			rov.Instruct(testCase.turn)
 
 			// Then / Assert
-			is.Equal(rov.GetFacing(), tc.finish) // Rover is not facing correct final direction
+			assert.Equal(rov.GetFacing(), testCase.finish) // Rover is not facing correct final direction
 		})
 	}
 }
 
 func TestRoverMove(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[rune][]struct {
 		moveDir rune
 		finish  rover.Coords
@@ -75,28 +83,32 @@ func TestRoverMove(t *testing.T) {
 			desc := fmt.Sprintf("Face %v and move %v", string(facing), string(innerCase.moveDir))
 
 			t.Run(desc, func(t *testing.T) {
+				t.Parallel()
+
 				// Arrange
-				is := is.New(t)
+				assert := is.New(t)
 				rov := rover.New(0, 0, facing)
 
 				// Act
 				rov.Instruct(innerCase.moveDir)
 
 				// Assert
-				is.Equal(rov.GetCoords(), innerCase.finish) // Rover hasn't moved correctly
+				assert.Equal(rov.GetCoords(), innerCase.finish) // Rover hasn't moved correctly
 			})
 		}
 	}
 }
 
 func TestRoverMultipleInstructions(t *testing.T) {
+	t.Parallel()
+
 	// Arrange
-	is := is.New(t)
+	assert := is.New(t)
 	rov := rover.New(0, 0, rover.North)
 
 	// Act
 	rov.Instruct(rover.Forward, rover.Right, rover.Forward, rover.Forward)
 
 	// Assert
-	is.Equal(rov.GetCoords(), rover.Coords{2, 1}) // Rover hasn't followed multiple instructions properly
+	assert.Equal(rov.GetCoords(), rover.Coords{2, 1}) // Rover hasn't followed multiple instructions properly
 }
